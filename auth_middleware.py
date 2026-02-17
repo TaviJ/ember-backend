@@ -1,19 +1,31 @@
-from functools import wraps
 from flask import request, jsonify, g
 import jwt
 import os
+from functools import wraps
+
 
 def token_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
-        authorization_header = request.headers.get('Authorization')
-        if authorization_header is None:
-            return jsonify({"error": "Unauthorized"}), 401
+    def decorated(*args, **kwargs):
+        auth_header = request.headers.get("Authorization")
+
+        if not auth_header:
+            return jsonify({"err": "Authorization header missing"}), 401
+
         try:
-            token = authorization_header.split(' ')[1]
-            token_data = jwt.decode(token, os.getenv('JWT_SECRET'), algorithms=["HS256"])
-            g.user = token_data
-        except Exception as error:
-            return jsonify({"error": str(error)}), 500
+            token = auth_header.split(" ")[1]
+            decoded = jwt.decode(
+                token,
+                os.getenv("JWT_SECRET"),
+                algorithms=["HS256"]
+            )
+
+            
+            g.user = decoded
+
+        except Exception as e:
+            return jsonify({"err": "Signature verification failed"}), 401
+
         return f(*args, **kwargs)
-    return decorated_function
+
+    return decorated

@@ -242,7 +242,7 @@ def log_entries_update(entry_id):
     try:
         data = request.get_json()
 
-        entry_date = data.get("entry_date")
+        entry_date = data.get("entry_date") or None
         mood = data.get("mood")
         activity = data.get("activity")
         note = data.get("note")

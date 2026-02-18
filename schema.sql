@@ -1,6 +1,6 @@
 BEGIN;
 
--- USERS (matches your sign-up/sign-in code)
+-- USERS 
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- LOG ENTRIES (matches your /log-entries POST)
+-- LOG ENTRIES 
 CREATE TABLE IF NOT EXISTS log_entries (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
